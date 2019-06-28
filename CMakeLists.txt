@@ -42,11 +42,7 @@ add_library(android_dlib SHARED
             ${JNI_COMMON_SRC}/jni_utils.cpp
             ${JNI_COMMON_SRC}/rgb2yuv.cpp
             ${JNI_COMMON_SRC}/yuv2rgb.cpp
-            ${DLIB_DIR}//dlib/threads/threads_kernel_shared.cpp
-            ${DLIB_DIR}/dlib/entropy_decoder/entropy_decoder_kernel_2.cpp
-            ${DLIB_DIR}/dlib/base64/base64_kernel_1.cpp
-            ${DLIB_DIR}/dlib/threads/threads_kernel_1.cpp
-            ${DLIB_DIR}/dlib/threads/threads_kernel_2.cpp
+            ${DLIB_DIR}/dlib/all/source.cpp
             ${EXT_DIR}/miniglog/glog/logging.cc)
 
 target_link_libraries(android_dlib

@@ -18,6 +18,8 @@
 #define CLASSNAME_FACE_DET "com/tzutalin/dlib/FaceDet"
 #define CLASSNAME_PEDESTRIAN_DET "com/tzutalin/dlib/PedestrianDet"
 
+#define CLASSNAME_FACE_REC "com/tzutalin/dlib/FaceRec"
+
 class JavaPeer {
  public:
   JavaPeer(JNIEnv* env, const char* className, const char* constSig) {
@@ -115,6 +117,10 @@ class JNI_VisionDetRet {
     jID_bottom = env->GetFieldID(detRetClass, "mBottom", "I");
     jMethodID_addLandmark =
         env->GetMethodID(detRetClass, "addLandmark", "(II)Z");
+    jMethodID_addDescriptor =
+        env->GetMethodID(detRetClass, "addDescriptor", "([F)Z");
+    jMethodID_addAlignedImage =
+        env->GetMethodID(detRetClass, "addAlignedImage", "([I)Z");
   }
 
   void setLabel(JNIEnv* env, jobject& jDetRet, const std::string& label) {
@@ -132,6 +138,14 @@ class JNI_VisionDetRet {
 
   void addLandmark(JNIEnv* env, jobject& jDetRet, const int& x, const int& y) {
     env->CallBooleanMethod(jDetRet, jMethodID_addLandmark, x, y);
+  }
+
+  void addDescriptor(JNIEnv* env, jobject& jDetRet, const jfloatArray descriptor) {
+    env->CallBooleanMethod(jDetRet, jMethodID_addDescriptor, descriptor);
+  }
+
+  void addAlignedImage(JNIEnv* env, jobject& jDetRet, const jintArray alignedImage) {
+    env->CallBooleanMethod(jDetRet, jMethodID_addAlignedImage, alignedImage);
   }
 
   static jobject createJObject(JNIEnv* env) {
@@ -154,5 +168,7 @@ class JNI_VisionDetRet {
   jfieldID jID_right;
   jfieldID jID_bottom;
   jmethodID jMethodID_addLandmark;
+  jmethodID jMethodID_addDescriptor;
+  jmethodID jMethodID_addAlignedImage;
 };
 #endif  // JNI_PRIMITIVES_H

@@ -110,6 +110,18 @@ jobjectArray getDetectResult(JNIEnv* env, DetectorPtr faceDetector,
         int y = shape.part(j).y();
         // Call addLandmark
         g_pJNI_VisionDetRet->addLandmark(env, jDetRet, x, y);
+        LOG(INFO) << "Calculating descriptor from image and rect";
+
+
+        LOG(INFO) << "Adding descriptors";
+        jfloatArray descriptorArray = env -> NewFloatArray(128);
+        float* descriptors = new float[128];
+        for (int i = 0; i < 128; i++) {
+          descriptors[i] = (float) 0.1;
+        }
+        env->SetFloatArrayRegion(descriptorArray, 0, 128, descriptors);
+        free(descriptors);
+        g_pJNI_VisionDetRet->addDescriptor(env, jDetRet, descriptorArray);
       }
     }
   }
@@ -148,10 +160,11 @@ JNIEXPORT jobjectArray JNICALL
 }
 
 jint JNIEXPORT JNICALL DLIB_FACE_JNI_METHOD(jniInit)(JNIEnv* env, jobject thiz,
-                                                     jstring jLandmarkPath) {
+                                                     jstring jLandmarkPath, jstring jNetModelPath) {
   LOG(INFO) << "jniInit";
   std::string landmarkPath = jniutils::convertJStrToString(env, jLandmarkPath);
-  DetectorPtr detPtr = new DLibHOGFaceDetector(landmarkPath);
+  std::string netModelPath = jniutils::convertJStrToString(env, jNetModelPath);
+  DetectorPtr detPtr = new DLibHOGFaceDetector(landmarkPath, netModelPath);
   setDetectorPtr(env, thiz, detPtr);
   ;
   return JNI_OK;
